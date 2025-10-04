@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@700&display=swap');
+
+:root{
+  --panel-bg: rgba(11,19,54,0.4);
+  --border: rgba(162,89,255,0.2);
+  --grad-a: #a259ff;
+  --grad-b: #ff71ce;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:#050c2a;
+  min-height:100vh;
+  overflow:hidden;
+}
+
+/* Background Canvas */
+#particle-canvas{ position:fixed; inset:0; width:100%; height:100%; z-index:0; }
+
+/* Main Panel (Landscape) */
+.container{
+  position:relative; z-index:1;
+  width:min(1200px,92vw); height:min(86vh,900px);
+  margin:7vh auto 0;
+  background:var(--panel-bg);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border); border-radius:26px;
+  box-shadow:0 8px 60px rgba(0,0,0,.5);
+  display:grid; grid-template-rows:auto 1fr auto; gap:10px;
+}
+
+/* Animated Glow Border */
+.container::before{
+  content:''; position:absolute; inset:-2px; border-radius:28px; z-index:-1;
+  background:conic-gradient(from var(--angle),
+    #050c2a, var(--grad-a), var(--grad-b), #01cdfe, var(--grad-a), #050c2a);
+  animation:spin 4s linear infinite;
+}
+@property --angle{syntax:'<angle>'; initial-value:0deg; inherits:false;}
+@keyframes spin{to{--angle:360deg}}
+
+/* Header */
+.hero{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:22px 20px 6px;
+}
+.game-logo{
+  width:110px; height:auto;
+  filter:drop-shadow(0 0 15px rgba(162,89,255,.5));
+}
+/* Single-line Title */
+.title-one-line{
+  margin:12px 0 0;
+  font-family:'Montserrat',sans-serif;
+  white-space:nowrap;           /* एक ही लाइन */
+  font-size:clamp(26px, 4vw, 44px);
+  color:#fff;
+  text-shadow:0 0 10px #fff, 0 0 20px var(--grad-a), 0 0 40px var(--grad-a);
+  letter-spacing:.5px;
+}
+
+/* Stage */
+.stage{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:22px; height:100%;
+}
+
+/* Bigger Bottle */
+#bottle{
+  width:auto;
+  height:clamp(340px, 42vh, 520px);   /* बड़ा size */
+  object-fit:contain;
+  filter:drop-shadow(0 20px 35px rgba(0,0,0,.6))
+         drop-shadow(0 0 25px rgba(255,113,206,.45));
+  transition:transform .2s ease-out;
+}
+
+/* Button under Bottle */
+#spinBtn{
+  padding:16px 28px;
+  font-size:16px; font-weight:800; letter-spacing:1.6px;
+  font-family:'Montserrat',sans-serif; text-transform:uppercase;
+  border:none; border-radius:999px; color:#fff; cursor:pointer;
+  background:linear-gradient(45deg, var(--grad-a), var(--grad-b));
+  box-shadow:0 6px 26px rgba(162,89,255,.5);
+  transition:transform .18s ease, box-shadow .18s ease, opacity .2s ease;
+}
+#spinBtn:hover{ transform:translateY(-3px) scale(1.02); box-shadow:0 14px 40px rgba(162,89,255,.7); }
+#spinBtn:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+
+/* Credit (inside container, centered) */
+.game-credit{
+  margin:12px 0 20px;
+  font-size:.9rem; font-weight:700; color:#fff;
+  text-transform:uppercase; letter-spacing:2px; text-align:center; opacity:.9;
+}
+
+/* Responsive Tweaks */
+@media (max-width:900px){
+  .container{ width:94vw; }
+}
