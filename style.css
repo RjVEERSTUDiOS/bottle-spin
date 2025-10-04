@@ -1,83 +1,72 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@700&display=swap');
 
 :root{
-  --panel-bg: rgba(11,19,54,0.4);
-  --border: rgba(162,89,255,0.2);
+  --panel-tint: rgba(11,19,54,0.45);
+  --border: rgba(255,255,255,0.10);
   --grad-a: #a259ff;
   --grad-b: #ff71ce;
 }
 
-*{box-sizing:border-box}
+*{ box-sizing:border-box }
 body{
   margin:0;
   font-family:'Poppins',sans-serif;
-  background:#050c2a;
   min-height:100vh;
-  overflow:hidden;
+  background:#0a0f17;
 }
 
-/* Background Canvas */
-#particle-canvas{ position:fixed; inset:0; width:100%; height:100%; z-index:0; }
+/* Universe dots canvas */
+#starfield{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  display:block;
+}
 
-/* Main Panel (Landscape) */
+/* Glass panel with rounded corners */
 .container{
   position:relative; z-index:1;
   width:min(1200px,92vw); height:min(86vh,900px);
   margin:7vh auto 0;
-  background:var(--panel-bg);
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--border); border-radius:26px;
-  box-shadow:0 8px 60px rgba(0,0,0,.5);
+  border-radius:26px; overflow:hidden;
+
+  background:
+    linear-gradient(var(--panel-tint), var(--panel-tint)),
+    url("ChatGPT Image Oct 4, 2025, 07_35_34 PM.png") center/cover no-repeat;
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border:1px solid var(--border);
+  box-shadow:0 8px 60px rgba(0,0,0,.55);
   display:grid; grid-template-rows:auto 1fr auto; gap:10px;
 }
 
-/* Animated Glow Border */
-.container::before{
-  content:''; position:absolute; inset:-2px; border-radius:28px; z-index:-1;
-  background:conic-gradient(from var(--angle),
-    #050c2a, var(--grad-a), var(--grad-b), #01cdfe, var(--grad-a), #050c2a);
-  animation:spin 4s linear infinite;
-}
-@property --angle{syntax:'<angle>'; initial-value:0deg; inherits:false;}
-@keyframes spin{to{--angle:360deg}}
-
-/* Header */
 .hero{
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:22px 20px 6px;
+  display:flex; justify-content:flex-end; align-items:center;
+  padding:16px 18px;
 }
+.logo-wrapper{ display:inline-block; }
 .game-logo{
-  width:110px; height:auto;
-  filter:drop-shadow(0 0 15px rgba(162,89,255,.5));
-}
-/* Single-line Title */
-.title-one-line{
-  margin:12px 0 0;
-  font-family:'Montserrat',sans-serif;
-  white-space:nowrap;           /* एक ही लाइन */
-  font-size:clamp(26px, 4vw, 44px);
-  color:#fff;
-  text-shadow:0 0 10px #fff, 0 0 20px var(--grad-a), 0 0 40px var(--grad-a);
-  letter-spacing:.5px;
+  width:100px; height:auto; display:block;
+  filter:drop-shadow(0 0 12px rgba(0,0,0,.6));
 }
 
-/* Stage */
 .stage{
+  position:relative; z-index:2;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:22px; height:100%;
 }
 
-/* Bigger Bottle */
 #bottle{
   width:auto;
-  height:clamp(340px, 42vh, 520px);   /* बड़ा size */
+  height:clamp(260px, 36vh, 420px);
   object-fit:contain;
-  filter:drop-shadow(0 20px 35px rgba(0,0,0,.6))
-         drop-shadow(0 0 25px rgba(255,113,206,.45));
+  filter:drop-shadow(0 22px 38px rgba(0,0,0,.65));
   transition:transform .2s ease-out;
 }
 
-/* Button under Bottle */
 #spinBtn{
   padding:16px 28px;
   font-size:16px; font-weight:800; letter-spacing:1.6px;
@@ -90,14 +79,13 @@ body{
 #spinBtn:hover{ transform:translateY(-3px) scale(1.02); box-shadow:0 14px 40px rgba(162,89,255,.7); }
 #spinBtn:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
 
-/* Credit (inside container, centered) */
 .game-credit{
+  position:relative; z-index:2;
   margin:12px 0 20px;
   font-size:.9rem; font-weight:700; color:#fff;
-  text-transform:uppercase; letter-spacing:2px; text-align:center; opacity:.9;
+  text-transform:uppercase; letter-spacing:2px; text-align:center; opacity:.95;
 }
 
-/* Responsive Tweaks */
 @media (max-width:900px){
   .container{ width:94vw; }
 }

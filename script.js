@@ -16,11 +16,11 @@ function animateSpin(){
   spinBtn.textContent = 'SPINNING...';
 
   const startRotation = currentRotation;
-  const spinAmount   = (Math.floor(Math.random()*5) + 5) * 360; // 5–9 full spins
+  const spinAmount   = (Math.floor(Math.random()*5) + 5) * 360;
   const finalAngle   = Math.floor(Math.random()*360);
   const targetRotation = startRotation + spinAmount + finalAngle;
 
-  const duration = 4000; // ms
+  const duration = 4000;
   let startTime = null;
   const easeOutQuint = t => 1 - Math.pow(1 - t, 5);
 
@@ -44,50 +44,39 @@ function animateSpin(){
   requestAnimationFrame(step);
 }
 
-/* Particle background (unchanged) */
-const canvas = document.getElementById('particle-canvas');
-const ctx = canvas.getContext('2d');
-let particlesArray = [];
-const mouse = { x:null, y:null, radius:150 };
+// Universe dotted background
+const starCanvas = document.getElementById('starfield');
+const sctx = starCanvas.getContext('2d');
 
-window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
+function drawStars(){
+  starCanvas.width = window.innerWidth;
+  starCanvas.height = window.innerHeight;
 
-class Particle{
-  constructor(x,y,dx,dy,size,color){ this.x=x; this.y=y; this.dx=dx; this.dy=dy; this.size=size; this.color=color; }
-  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2,false); ctx.fillStyle=this.color; ctx.fill(); }
-  update(){
-    if(this.x>canvas.width || this.x<0) this.dx = -this.dx;
-    if(this.y>canvas.height || this.y<0) this.dy = -this.dy;
+  const g = sctx.createLinearGradient(0,0,0,starCanvas.height);
+  g.addColorStop(0, '#0a0f17');
+  g.addColorStop(1, '#0a1120');
+  sctx.fillStyle = g;
+  sctx.fillRect(0,0,starCanvas.width,starCanvas.height);
 
-    const dx = mouse.x - this.x, dy = mouse.y - this.y;
-    const dist = Math.hypot(dx,dy);
-    if(dist < mouse.radius + this.size){
-      if(mouse.x < this.x && this.x < canvas.width - this.size*10) this.x += 5;
-      if(mouse.x > this.x && this.x > this.size*10)                  this.x -= 5;
-      if(mouse.y < this.y && this.y < canvas.height - this.size*10)  this.y += 5;
-      if(mouse.y > this.y && this.y > this.size*10)                  this.y -= 5;
+  const count = Math.floor((starCanvas.width * starCanvas.height) / 18000);
+  for(let i=0;i<count;i++){
+    const x = Math.random()*starCanvas.width;
+    const y = Math.random()*starCanvas.height;
+    const r = Math.random()*1.6 + 0.3;
+    const a = Math.random()*0.5 + 0.4;
+    sctx.beginPath();
+    sctx.arc(x,y,r,0,Math.PI*2);
+    sctx.fillStyle = `rgba(255,255,255,${a})`;
+    sctx.fill();
+
+    if(Math.random() < 0.08){
+      sctx.beginPath();
+      sctx.arc(x,y,r*1.6,0,Math.PI*2);
+      sctx.fillStyle = Math.random() < 0.5 ? 'rgba(160,200,255,0.18)' : 'rgba(255,170,220,0.18)';
+      sctx.fill();
     }
-    this.x += this.dx; this.y += this.dy; this.draw();
   }
 }
 
-function init(){
-  canvas.width = innerWidth; canvas.height = innerHeight;
-  particlesArray = [];
-  const n = (canvas.width < 768) ? 30 : 100;
-  for(let i=0;i<n;i++){
-    const size = Math.random()*2 + 1;
-    const x = Math.random() * (innerWidth  - size*4) + size*2;
-    const y = Math.random() * (innerHeight - size*4) + size*2;
-    const dx = Math.random()*0.4 - 0.2;
-    const dy = Math.random()*0.4 - 0.2;
-    particlesArray.push(new Particle(x,y,dx,dy,size,'rgba(162,89,255,0.6)'));
-  }
-}
-function animate(){
-  requestAnimationFrame(animate);
-  ctx.clearRect(0,0,innerWidth,innerHeight);
-  for(const p of particlesArray) p.update();
-}
-window.addEventListener('resize', init);
-init(); animate();
+window.addEventListener('resize', drawStars);
+drawStars();
